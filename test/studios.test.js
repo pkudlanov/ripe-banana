@@ -55,7 +55,7 @@ describe('app routes', () => {
     });
 
     it('returns all studios with GET in form of {id, name}', async() => {
-        const studio = await Studio.create([
+        const studios = await Studio.create([
             { name: 'No. 2 Studios', address: { city: 'Portland' } },
             { name: 'Epic Creations' },
             { name: 'Watch Our Stuff' }
@@ -64,13 +64,25 @@ describe('app routes', () => {
         return request(app)
             .get('/api/v1/studios')
             .then(res => {
-                const studioJSON = JSON.parse(JSON.stringify(studio));
-                studioJSON.forEach(studio => {
+                const studiosJSON = JSON.parse(JSON.stringify(studios));
+                studiosJSON.forEach(studio => {
                     expect(res.body).toContainEqual({
                         _id: studio._id,
                         name: studio.name
                     });
                 });
+            });
+    });
+
+    it('returns studio by id with GET:id', async() => {
+        const studio = await Studio.create([
+            { name: 'No. 2 Studios', address: { city: 'Portland' } },
+        ]);
+
+        return request(app)
+            .get(`/api/v1/studios/${studio._id}`)
+            .then(res => {
+                expect(res.body.name).toEqual('No. 2 Studios');
             });
     });
 });
