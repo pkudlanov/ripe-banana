@@ -75,9 +75,9 @@ describe('app routes', () => {
     });
 
     it('returns studio by id with GET:id', async() => {
-        const studio = await Studio.create([
+        const studio = await Studio.create(
             { name: 'No. 2 Studios', address: { city: 'Portland' } },
-        ]);
+        );
 
         return request(app)
             .get(`/api/v1/studios/${studio._id}`)
