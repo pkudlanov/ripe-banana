@@ -4,7 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
-// const Studio = require('../lib/models/Studio');
+const Studio = require('../lib/models/Studio');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -50,6 +50,23 @@ describe('app routes', () => {
                         country: 'United States of America'
                     },
                     __v: 0
+                });
+            });
+    });
+
+    it('returns all studios with GET in form of {id, name}', async() => {
+        const studio = await Studio.create([
+            { name: 'No. 2 Studios' },
+            { name: 'Epic Creations' },
+            { name: 'Watch Our Stuff' }
+        ]);
+
+        return request(app)
+            .get('/api/v1/studios')
+            .then(res => {
+                const studioJSON = JSON.parse(JSON.stringify(studio));
+                studioJSON.forEach(studio => {
+                    expect(res.body).toContainEqual(studio);
                 });
             });
     });
