@@ -39,4 +39,24 @@ describe('app routes', () => {
                 });
             });
     });
+
+    it('gets all the acters with GET in object with id and name', async() => {
+        const actors = await Actor.create([
+            { name: 'Me', dob: '2014-03-28', pob: 'Giza, Egypt' },
+            { name: 'Pam Jammie' },
+            { name: 'Him' }
+        ]);
+
+        return request(app)
+            .get('/api/v1/studios')
+            .then(res => {
+                const actorsJSON = JSON.parse(JSON.stringify(actors));
+                actorsJSON.forEach(actor => {
+                    expect(res.body).toContainEqual({
+                        _id: actor._id,
+                        name: actor.name
+                    });
+                });
+            });
+    });
 });
