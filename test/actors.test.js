@@ -72,5 +72,29 @@ describe('app routes', () => {
             });
     });
 
+    it('updates the actor with PUT', async() => {
+        const actor = await Actor.create({
+            name: 'Bob Builder',
+            dob: '1972-08-22',
+            pob: 'Portland, Maine'
+        });
+
+        return request(app)
+            .put(`/api/v1/actors/${actor._id}`)
+            .send({
+                name: 'Bob Barkley',
+                dob: '1972-12-08',
+                pob: 'Portland, Oregon'
+            })
+            .then(res => {
+                expect(res.body).toEqual({
+                    _id: expect.any(String),
+                    name: 'Bob Barkley',
+                    dob: '1972-12-08',
+                    pob: 'Portland, Oregon',
+                    __v: 0
+                });
+            });
+    });
     // post, get, get:id, put, delete(only if not in any film)
 });
