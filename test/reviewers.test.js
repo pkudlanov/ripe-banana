@@ -69,5 +69,26 @@ describe('app routes', () => {
                 expect(res.body.name).toEqual('Conner Pilsby');
             });
     });
-    // reviewers will get POST, GET, GET:id, PUT
+    
+    it('updates the reviewer with PUT', async() => {
+        const reviewer = await Reviewer.create({
+            name: 'Mike Spence',
+            company: 'Living in the Theater'
+        });
+
+        return request(app)
+            .put(`/api/v1/reviewers/${reviewer._id}`)
+            .send({
+                name: 'Arnold Spence',
+                company: 'Theater Life'
+            })
+            .then(res => {
+                expect(res.body).toEqual({
+                    _id: expect.any(String),
+                    name: 'Arnold Spence',
+                    company: 'Theater Life',
+                    __v: 0
+                });
+            });
+    });
 });
