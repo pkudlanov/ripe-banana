@@ -75,14 +75,29 @@ describe('app routes', () => {
     });
 
     it('returns studio by id with GET:id', async() => {
-        const studio = await Studio.create(
-            { name: 'No. 2 Studios', address: { city: 'Portland' } },
-        );
+        const studio = await Studio.create({
+            name: 'No. 2 Studios',
+            address: { city: 'Portland' }
+        });
 
         return request(app)
             .get(`/api/v1/studios/${studio._id}`)
             .then(res => {
                 expect(res.body.name).toEqual('No. 2 Studios');
+            });
+    });
+
+    it('deletes a studio with DELETE', async() => {
+        const studio = await Studio.create({
+            name: 'Cold Truth',
+            address: { country: 'Georgia' }
+        });
+
+        return request(app)
+            .delete(`/api/v1/studios/${studio._id}`)
+            .then(res => {
+                const studioJSON = JSON.parse(JSON.stringify(studio));
+                expect(res.body).toEqual(studioJSON);
             });
     });
 });
