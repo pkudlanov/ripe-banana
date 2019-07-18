@@ -111,5 +111,4 @@ describe('app routes', () => {
                 expect(res.body).toEqual(actorJSON);
             });
     });
-    // post, get, get:id, put, delete(only if not in any film)
 });
