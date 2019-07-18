@@ -90,7 +90,7 @@ describe('app routes', () => {
                 expect(res.body).toEqual({
                     _id: expect.any(String),
                     name: 'Bob Barkley',
-                    dob: '1972-12-08',
+                    dob: expect.stringContaining('1972-12-08'),
                     pob: 'Portland, Oregon',
                     __v: 0
                 });
