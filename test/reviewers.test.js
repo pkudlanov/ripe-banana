@@ -4,7 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
-// const Reviewer = require('../lib/models/Reviewer');
+const Reviewer = require('../lib/models/Reviewer');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -32,6 +32,27 @@ describe('app routes', () => {
                     name: 'Johnny Orangeseed',
                     company: 'Johnny\'s Opinions',
                     __v: 0
+                });
+            });
+    });
+
+    it('gets all the reviewers with GET ', async() => {
+        const reviewers = await Reviewer.create([
+            { name: 'Georgi Cooper', company: 'Coopers Tires' },
+            { name: 'Sheldon Cooper', company: 'Unemployed' },
+            { name: 'Albert Cromford', company: 'Needle Point Filmography'} 
+        ]);
+
+        return request(app)
+            .get('/api/v1/reviewers')
+            .then(res => {
+                const reviewersJSON = JSON.parse(JSON.stringify(reviewers));
+                reviewersJSON.forEach(reviewer => {
+                    expect(res.body).toContainEqual({
+                        _id: reviewer._id,
+                        name: reviewer.name,
+                        company: reviewer.company
+                    });
                 });
             });
     });
