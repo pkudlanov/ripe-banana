@@ -68,7 +68,7 @@ describe('app routes', () => {
         return request(app)
             .get(`/api/v1/actors/${actor._id}`)
             .then(res => {
-                expect(res.body.name).toEqual('Jeffrey, Boltz');
+                expect(res.body.name).toEqual('Jeffrey Boltz');
             });
     });
 
