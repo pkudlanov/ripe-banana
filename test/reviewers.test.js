@@ -40,7 +40,7 @@ describe('app routes', () => {
         const reviewers = await Reviewer.create([
             { name: 'Georgi Cooper', company: 'Coopers Tires' },
             { name: 'Sheldon Cooper', company: 'Unemployed' },
-            { name: 'Albert Cromford', company: 'Needle Point Filmography'} 
+            { name: 'Albert Cromford', company: 'Needle Point Filmography' }
         ]);
 
         return request(app)
@@ -54,6 +54,19 @@ describe('app routes', () => {
                         company: reviewer.company
                     });
                 });
+            });
+    });
+
+    it('get the reviewer by id with GET:id', async() => {
+        const reviewer = await Reviewer.create({
+            name: 'Conner Pilsby',
+            company: 'iWatchFilms'
+        });
+
+        return request(app)
+            .get(`/api/v1/reviewers/${reviewer._id}`)
+            .then(res => {
+                expect(res.body.name).toEqual('Conner Pilsby');
             });
     });
     // reviewers will get POST, GET, GET:id, PUT
