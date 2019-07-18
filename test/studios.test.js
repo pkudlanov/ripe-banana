@@ -87,6 +87,38 @@ describe('app routes', () => {
             });
     });
 
+    it('returns studio by id with GET:id in correct form', async() => {
+        // { _id, name, address, films: [{ _id, title }] }
+        const studio = await Studio.create({
+            name: 'No. 2 Studios',
+            address: { city: 'Portland' }
+        });
+
+        const actor = await Actor.create({
+            name: 'Jack Daniel'
+        });
+        // title: R, studio: R, released: R, cast: [{ actor: actor id R }]
+        const films = await Film.create([{
+            title: 'Forsage on Mars',
+            studio: studio._id,
+            released: 2038,
+            cast: [{ actor: actor._id }]
+        }]);
+
+        return request(app)
+            .get(`/api/v1/studios/${studio._id}`)
+            .then(res => {
+                expect(res.body).toContainEqual({
+                    _id: studio._id,
+                    name: 'No. 2 Studios',
+                    address: { city: 'Portland' },
+                    films: [
+                        { _id, title }
+                    ]
+                });
+            });
+    });
+
     it('deletes a studio with DELETE', async() => {
         const studio = await Studio.create({
             name: 'Cold Truth',
