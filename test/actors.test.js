@@ -32,8 +32,8 @@ describe('app routes', () => {
             .then(res => {
                 expect(res.body).toEqual({
                     _id: expect.any(String),
-                    name: 'George Alberson',
-                    dob: '1917-05-09',
+                    name: 'George Albertson',
+                    dob: expect.stringContaining('1917-05-09'),
                     pob: 'Hamburg, Germany',
                     __v: 0
                 });
