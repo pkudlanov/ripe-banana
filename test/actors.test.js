@@ -19,8 +19,6 @@ describe('app routes', () => {
         return mongoose.connection.close();
     });
 
-    // post, get, get:id, put, delete(only if not in any film)
-
     it('creates a new actor object with POST', () => {
         return request(app)
             .post('/api/v1/actors')
@@ -59,4 +57,20 @@ describe('app routes', () => {
                 });
             });
     });
+
+    it('gets actor by id with GET:id', async() => {
+        const actor = await Actor.create({
+            name: 'Jeffrey Boltz',
+            dob: '1999-10-02',
+            pob: 'Lititz, Pennsylvania'
+        });
+
+        return request(app)
+            .get(`/api/v1/actors/${actor._id}`)
+            .then(res => {
+                expect(res.body.name).toEqual('Jeffrey, Boltz');
+            });
+    });
+
+    // post, get, get:id, put, delete(only if not in any film)
 });
