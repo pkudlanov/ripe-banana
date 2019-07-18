@@ -96,5 +96,20 @@ describe('app routes', () => {
                 });
             });
     });
+
+    it('deletes an actor with DELETE', async() => {
+        const actor = await Actor.create({
+            name: 'Robert Mafussa',
+            dob: '1998-12-19',
+            pob: 'Des Moines, Iowa'
+        });
+
+        return request(app)
+            .delete(`/api/v1/actors/${actor._id}`)
+            .then(res => {
+                const actorJSON = JSON.parse(JSON.stringify(actor));
+                expect(res.body).toEqual(actorJSON);
+            });
+    });
     // post, get, get:id, put, delete(only if not in any film)
 });
