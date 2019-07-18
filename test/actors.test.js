@@ -48,7 +48,7 @@ describe('app routes', () => {
         ]);
 
         return request(app)
-            .get('/api/v1/studios')
+            .get('/api/v1/actors')
             .then(res => {
                 const actorsJSON = JSON.parse(JSON.stringify(actors));
                 actorsJSON.forEach(actor => {
