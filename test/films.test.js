@@ -124,7 +124,7 @@ describe('app routes', () => {
         return request(app)
             .delete(`/api/v1/films/${film._id}`)
             .then(res => {
-                const filmJSON = JSON.parse(JSON.stringify(actor));
+                const filmJSON = JSON.parse(JSON.stringify(film));
                 expect(res.body).toEqual(filmJSON);
             });
     });
