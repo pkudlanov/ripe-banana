@@ -5,6 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
+const Film = require('../lib/models/Film');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -16,12 +17,24 @@ describe('app routes', () => {
     });
 
     let actor = null;
+    let actor2 = null;
     beforeEach(async() => {
         actor = JSON.parse(JSON.stringify(await Actor.create({
             name: 'Robert Mafussa',
             dob: '1998-12-19',
             pob: 'Des Moines, Iowa'
         })));
+        actor2 = JSON.parse(JSON.stringify(await Actor.create({
+            name: 'Jestifious Promisthus',
+            dob: '1728-04-17',
+            pob: 'Athens, Greece'
+        })));
+        await Film.create({
+            title: 'Markers Down Half Past 12',
+            studio: 'Boss Studios',
+            released: 2014,
+            cast: [{ actor: actor2._id }]
+        });
     });
 
     afterAll(() => {
@@ -90,12 +103,6 @@ describe('app routes', () => {
     });
 
     it('updates the actor with PUT', async() => {
-        const actor = await Actor.create({
-            name: 'Bob Builder',
-            dob: '1972-08-22',
-            pob: 'Portland, Maine'
-        });
-
         return request(app)
             .put(`/api/v1/actors/${actor._id}`)
             .send({
@@ -114,18 +121,19 @@ describe('app routes', () => {
             });
     });
 
-    it('deletes an actor with DELETE', async() => {
-        const actor = await Actor.create({
-            name: 'Robert Mafussa',
-            dob: '1998-12-19',
-            pob: 'Des Moines, Iowa'
-        });
-
+    it('deletes an actor with DELETE', () => {
         return request(app)
             .delete(`/api/v1/actors/${actor._id}`)
             .then(res => {
-                const actorJSON = JSON.parse(JSON.stringify(actor));
-                expect(res.body).toEqual(actorJSON);
+                expect(res.body).toEqual(actor);
+            });
+    });
+
+    it('does not delete an actor if hes in a film with DELETE', () => {
+        return request(app)
+            .delete(`/api/v1/actors/${actor2._id}`)
+            .then(res => {
+                expect(res.body).not.toEqual(actor2);
             });
     });
 });
