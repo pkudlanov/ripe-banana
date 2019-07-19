@@ -15,6 +15,14 @@ describe('app routes', () => {
         return mongoose.connection.dropDatabase();
     });
 
+    let reviewer = null;
+    beforeEach(async() => {
+        reviewer = JSON.parse(JSON.stringify(await Reviewer.create({
+            name: 'Mike Spence',
+            company: 'Living in the Theater'
+        })));
+    });
+
     afterAll(() => {
         return mongoose.connection.close();
     });
@@ -57,25 +65,23 @@ describe('app routes', () => {
             });
     });
 
-    it('get the reviewer by id with GET:id', async() => {
-        const reviewer = await Reviewer.create({
-            name: 'Conner Pilsby',
-            company: 'iWatchFilms'
-        });
-
+    it('get the reviewer by id with GET:id', () => {
         return request(app)
             .get(`/api/v1/reviewers/${reviewer._id}`)
             .then(res => {
-                expect(res.body.name).toEqual('Conner Pilsby');
+                expect(res.body.name).toEqual('Mike Spence');
+            });
+    });
+
+    it('gets the reviewer by id and their film reviews with GET:id in correct form', () => {
+        return request(app)
+            .get(`/api/v1/reviewers/${reviewer._id}`)
+            .then(res => {
+                console.log(res.body);
             });
     });
     
-    it('updates the reviewer with PUT', async() => {
-        const reviewer = await Reviewer.create({
-            name: 'Mike Spence',
-            company: 'Living in the Theater'
-        });
-
+    it('updates the reviewer with PUT', () => {
         return request(app)
             .put(`/api/v1/reviewers/${reviewer._id}`)
             .send({
