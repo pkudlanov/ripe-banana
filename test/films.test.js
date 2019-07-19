@@ -89,4 +89,22 @@ describe('app routes', () => {
                 });
             });
     });
+    
+    it('gets a film by id with GET:id not correct form yet', async() => {
+        const film = await Film.create({
+            title: 'Flying Past the Moon',
+            studio: studio._id,
+            released: 2007,
+            cast: [{
+                role: 'James Walter',
+                actor: actor._id
+            }]
+        });
+
+        return request(app)
+            .get(`/api/v1/actors/${actor._id}`)
+            .then(res => {
+                expect(res.body.title).toEqual('Flying Past the Moon');
+            });
+    });
 });
