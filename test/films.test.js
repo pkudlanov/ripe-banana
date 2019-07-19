@@ -107,4 +107,23 @@ describe('app routes', () => {
                 expect(res.body.title).toEqual('Flying Past the Moon');
             });
     });
+
+    it('deletes a film by id with DELETE', async() => {
+        const film = await Film.create({
+            title: 'Reading the Bullet',
+            studio: studio._id,
+            released: 2009,
+            cast: [{
+                role: 'Jackie McGuire',
+                actor: actor._id
+            }]
+        });
+
+        return request(app)
+            .delete(`/api/v1/films/${film._id}`)
+            .then(res => {
+                const filmJSON = JSON.parse(JSON.stringify(actor));
+                expect(res.body).toEqual(filmJSON);
+            });
+    });
 });
