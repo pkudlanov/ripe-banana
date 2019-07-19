@@ -15,6 +15,15 @@ describe('app routes', () => {
         return mongoose.connection.dropDatabase();
     });
 
+    let actor = null;
+    beforeEach(async() => {
+        actor = JSON.parse(JSON.stringify(await Actor.create({
+            name: 'Robert Mafussa',
+            dob: '1998-12-19',
+            pob: 'Des Moines, Iowa'
+        })));
+    });
+
     afterAll(() => {
         return mongoose.connection.close();
     });
@@ -59,16 +68,11 @@ describe('app routes', () => {
     });
 
     it('gets actor by id with GET:id', async() => {
-        const actor = await Actor.create({
-            name: 'Jeffrey Boltz',
-            dob: '1999-10-02',
-            pob: 'Lititz, Pennsylvania'
-        });
-
         return request(app)
             .get(`/api/v1/actors/${actor._id}`)
             .then(res => {
-                expect(res.body.name).toEqual('Jeffrey Boltz');
+                console.log(res.body);
+                expect(res.body.name).toEqual('Robert Mafussa');
             });
     });
 
