@@ -119,8 +119,6 @@ describe('app routes', () => {
             }]
         });
 
-        console.log(film);
-
         return request(app)
             .delete(`/api/v1/films/${film._id}`)
             .then(res => {
