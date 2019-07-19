@@ -43,7 +43,7 @@ describe('app routes', () => {
             released: 2008,
             cast: [{ actor: actor._id }]
         })));
-    })
+    });
 
     afterAll(() => {
         return mongoose.connection.close();
