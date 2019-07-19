@@ -6,7 +6,7 @@ const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
 const Actor = require('../lib/models/Actor');
-// const Film = require('../lib/models/Film');
+const Film = require('../lib/models/Film');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -18,11 +18,6 @@ describe('app routes', () => {
     beforeEach(async() => {
         studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'Grassy Studios' })));
         actor = JSON.parse(JSON.stringify(await Actor.create({ name: 'Mell Grady' })));
-        // const testStudio = {
-        //     _id: '5e30fbdd34f909f844ba48b9',
-        //     name: 'Grassy Studios',
-        //     __v: 0
-        // };
     });
 
     beforeEach(() => {
@@ -58,6 +53,39 @@ describe('app routes', () => {
                         }
                     ],
                     __v: 0
+                });
+            });
+    });
+
+    it('gets all the films with GET', async() => {
+        const films = await Film.create([
+            {
+                title: 'Don\'t flake it!',
+                studio: studio._id,
+                released: 1995,
+                cast: [{ actor: actor._id }]
+            }, {
+                title: 'Shooting the Acorn',
+                studio: studio._id,
+                released: 2019,
+                cast: [{ actor: actor._id }]
+            }
+        ]);
+
+        return request(app)
+            .get('/api/v1/films')
+            .then(res => {
+                const filmsJSON = JSON.parse(JSON.stringify(films));
+                filmsJSON.forEach(film => {
+                    expect(res.body).toContainEqual({
+                        _id: film._id,
+                        title: film.title,
+                        released: film.released,
+                        studio: {
+                            _id: studio._id,
+                            name: studio.name
+                        }
+                    });
                 });
             });
     });
