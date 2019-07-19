@@ -19,16 +19,6 @@ describe('app routes', () => {
         return mongoose.connection.close();
     });
 
-    // name: {
-    //     type: String,
-    //     required: true
-    // },
-    // address: {
-    //     city: String,
-    //     state: String,
-    //     country: String
-    // }
-
     it('cretes a new studio object with POST', () => {
         return request(app)
             .post('/api/v1/studios')
