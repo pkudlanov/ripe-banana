@@ -102,7 +102,7 @@ describe('app routes', () => {
         });
 
         return request(app)
-            .get(`/api/v1/actors/${actor._id}`)
+            .get(`/api/v1/films/${film._id}`)
             .then(res => {
                 expect(res.body.title).toEqual('Flying Past the Moon');
             });
@@ -118,6 +118,8 @@ describe('app routes', () => {
                 actor: actor._id
             }]
         });
+
+        console.log(film);
 
         return request(app)
             .delete(`/api/v1/films/${film._id}`)
