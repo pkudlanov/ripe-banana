@@ -67,15 +67,9 @@ describe('app routes', () => {
             .then(res => {
                 expect(res.body).toEqual({
                     _id: expect.any(String),
-                    rating: '4',
+                    rating: 4,
                     reviewer: reviewer._id,
-                    review: `It was a rather raunchy film to say the least.
-                        Lots of slamming doors, and popping of tires. I never
-                        did nor do I now, approve of such activity. That is
-                        just plain and simple unacceptable in this universe
-                        or any for that matter. Don't watch the film if you
-                        don't want to get mentally scared for life from all
-                        the door slamming and popping of tires!`,
+                    review: expect.stringContaining('raunchy'),
                     film: film._id,
                     createdAt: expect.any(String),
                     updatedAt: expect.any(String),
