@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
+const Film = require('../lib/models/Film');
+const Actor = require('../lib/models/Actor');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -16,11 +18,29 @@ describe('app routes', () => {
     });
 
     let studio = null;
+    let studio2 = null;
+    let actor2 = null;
     beforeEach(async() => {
         studio = JSON.parse(JSON.stringify(await Studio.create({
             name: 'No. 2 Studios',
             address: { city: 'Portland' }
         })));
+        studio2 = JSON.parse(JSON.stringify(await Studio.create({
+            name: 'Cold Truth',
+            address: { country: 'Georgia' }
+        })));
+
+        actor2 = JSON.parse(JSON.stringify(await Actor.create({
+            name: 'Blaise Trumly'
+        })));
+
+
+        await Film.create({
+            title: 'Mark Becomes a Bum',
+            studio: studio2._id,
+            released: 2016,
+            cast: [{ actor: actor2._id }]
+        });
     });
 
     afterAll(() => {
@@ -93,17 +113,21 @@ describe('app routes', () => {
             });
     });
 
-    it('deletes a studio with DELETE', async() => {
-        const studio = await Studio.create({
-            name: 'Cold Truth',
-            address: { country: 'Georgia' }
-        });
-
+    it('deletes a studio with DELETE', () => {
         return request(app)
             .delete(`/api/v1/studios/${studio._id}`)
             .then(res => {
                 const studioJSON = JSON.parse(JSON.stringify(studio));
                 expect(res.body).toEqual(studioJSON);
+            });
+    });
+
+    it('does not delete a studio if it has films with DELETE', () => {
+        return request(app)
+            .delete(`/api/v1/studios/${studio2._id}`)
+            .then(res => {
+                const studioJSON = JSON.parse(JSON.stringify(studio2));
+                expect(res.body).not.toEqual(studioJSON);
             });
     });
 });
