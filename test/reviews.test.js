@@ -8,7 +8,7 @@ const Reviewer = require('../lib/models/Reviewer');
 const Studio = require('../lib/models/Studio');
 const Actor = require('../lib/models/Actor');
 const Film = require('../lib/models/Film');
-// const Review = require('../lib/models/Review');
+const Review = require('../lib/models/Review');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -78,8 +78,8 @@ describe('app routes', () => {
             });
     });
 
-    it('gets all or 100 recent reviews with GET', () => {
-        const reviews = [{
+    it('gets all or 100 recent reviews with GET', async() => {
+        const reviews = await Review.create([{
             rating: 1,
             reviewer: reviewer._id,
             review: `It was a rather raunchy film to say the least.
@@ -102,7 +102,7 @@ describe('app routes', () => {
                 really isn't half bad. Otherwise it is just plain a
                 waste of time.`,
             film: film._id
-        }];
+        }]);
 
         return request(app)
             .get('/api/v1/reviews')
@@ -115,7 +115,7 @@ describe('app routes', () => {
                         review: review.review,
                         film: {
                             _id: film._id,
-                            film: film.title
+                            title: film.title
                         }
                     });
                 });
