@@ -13,15 +13,15 @@ describe('app routes', () => {
         connect();
     });
 
+    beforeEach(() => {
+        return mongoose.connection.dropDatabase();
+    });
+
     let studio = null;
     let actor = null;
     beforeEach(async() => {
         studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'Grassy Studios' })));
         actor = JSON.parse(JSON.stringify(await Actor.create({ name: 'Mell Grady' })));
-    });
-
-    beforeEach(() => {
-        return mongoose.connection.dropDatabase();
     });
 
     afterAll(() => {
