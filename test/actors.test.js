@@ -67,12 +67,25 @@ describe('app routes', () => {
             });
     });
 
-    it('gets actor by id with GET:id', async() => {
+    it('gets actor by id with GET:id', () => {
         return request(app)
             .get(`/api/v1/actors/${actor._id}`)
             .then(res => {
                 console.log(res.body);
                 expect(res.body.name).toEqual('Robert Mafussa');
+            });
+    });
+
+    it('gets actor by id with GET:id in correct form', () => {
+        return request(app)
+            .get(`/api/v1/actors/${actor._id}`)
+            .then(res => {
+                expect(res.body).toEqual({
+                    name: 'Robert Mafussa',
+                    dob: '1998-12-19',
+                    pob: 'Des Moines, Iowa',
+                    films: expect.any(Array)
+                });
             });
     });
 
