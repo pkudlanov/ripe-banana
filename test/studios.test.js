@@ -84,7 +84,6 @@ describe('app routes', () => {
         return request(app)
             .get(`/api/v1/studios/${studio._id}`)
             .then(res => {
-                console.log(res.body);
                 expect(res.body).toEqual({
                     _id: studio._id,
                     name: 'No. 2 Studios',
