@@ -82,7 +82,7 @@ describe('app routes', () => {
             .then(res => {
                 expect(res.body).toEqual({
                     name: 'Robert Mafussa',
-                    dob: '1998-12-19',
+                    dob: expect.stringContaining('1998-12-19'),
                     pob: 'Des Moines, Iowa',
                     films: expect.any(Array)
                 });
