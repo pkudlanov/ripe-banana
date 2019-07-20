@@ -5,6 +5,10 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Reviewer = require('../lib/models/Reviewer');
+const Review = require('../lib/models/Review');
+const Film = require('../lib/models/Film');
+const Studio = require('../lib/models/Studio');
+const Actor = require('../lib/models/Actor');
 
 describe('app routes', () => {
     beforeAll(() => {
@@ -15,12 +19,45 @@ describe('app routes', () => {
         return mongoose.connection.dropDatabase();
     });
 
+    let film1 = null;
+    let film2 = null;
     let reviewer = null;
+    let studio = null;
+    let actor = null;
     beforeEach(async() => {
         reviewer = JSON.parse(JSON.stringify(await Reviewer.create({
             name: 'Mike Spence',
             company: 'Living in the Theater'
         })));
+        studio = JSON.parse(JSON.stringify(await Studio.create({
+            name: 'Stupid Films'
+        })));
+        actor = JSON.parse(JSON.stringify(await Actor.create({
+            name: 'Billy Joel'
+        })));
+        film1 = JSON.parse(JSON.stringify(await Film.create({
+            title: 'Joes Film',
+            studio: studio._id,
+            released: 1998,
+            cast: [{ actor: actor._id }]
+        })));
+        film2 = JSON.parse(JSON.stringify(await Film.create({
+            title: 'Nails',
+            studio: studio._id,
+            released: 1997,
+            cast: [{ actor: actor._id }]
+        })));
+        await Review.create([{
+            rating: 4,
+            reviewer: reviewer._id,
+            review: 'This is a review.',
+            film: film1._id
+        }, {
+            rating: 5,
+            reviewer: reviewer._id,
+            review: 'This is another review.',
+            film: film2._id
+        }]);
     });
 
     afterAll(() => {
@@ -78,6 +115,12 @@ describe('app routes', () => {
             .get(`/api/v1/reviewers/${reviewer._id}`)
             .then(res => {
                 console.log(res.body);
+                expect(res.body).toEqual({
+                    _id: reviewer._id,
+                    name: 'Mike Spence',
+                    company: 'Living in the Theater',
+                    reviews: expect.any(Array)
+                });
             });
     });
     
